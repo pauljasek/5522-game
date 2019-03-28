@@ -32,13 +32,18 @@ class Game(object):
         self.action_size = 3
 
     def new_random_game(self):
-        self.player = Block(self.W/2 + 0.5, self.H - 1, 1, 2, (0,0,0))
+        self.player = Block(self.W/2 + 0.5, self.H - 1, 1, 2, 0)
         self.blocks = []
         self.time = 0
         self.terminal = False
         return self.render(), 0, 0, self.terminal
+<<<<<<< HEAD
 
     def act(self, action):
+=======
+
+    def act(self, action, is_training=True):
+>>>>>>> e58cd9082d06206766304cdde8a3e6edf571327f
         assert not self.terminal
 
         reward = 0
@@ -57,19 +62,20 @@ class Game(object):
             if abs(block.x - self.player.x) < (block.w/2 + self.player.w/2) \
                 and abs(block.y - self.player.y) < (block.h/2 + self.player.h/2):
                     self.terminal = True
-                    reward = -1
+                    reward += -1
             elif block.y - block.h/2 >= self.H:
                 self.blocks.pop(i)
+                reward += 1
 
         if self.time % (1 + int(5*np.exp(-self.time/200))) == 0:
-            self.blocks.append(Block(random.randint(1,self.W) - 0.5, 0.5, 1, 1, (1, 0, 0)))
+            self.blocks.append(Block(random.randint(1,self.W) - 0.5, 0.5, 1, 1, 0.5))
 
 
         return self.render(), reward, self.terminal
 
 
     def render(self):
-        image = np.ones((self.W, self.H, 3))
+        image = np.ones((self.W, self.H))
         self.player.render(image)
         for block in self.blocks:
             block.render(image)

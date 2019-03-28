@@ -6,6 +6,7 @@ import numpy as np
 from tqdm import tqdm
 import tensorflow as tf
 from functools import reduce
+import cv2
 
 from base import BaseModel
 from history import History
@@ -357,6 +358,10 @@ class Agent(BaseModel):
         action = self.predict(test_history.get(), test_ep)
         # 2. act
         screen, reward, terminal = self.env.act(action, is_training=False)
+        
+        cv2.imshow('test', cv2.resize(screen, (500, 500), interpolation=cv2.INTER_NEAREST))    
+        cv2.waitKey(100)
+        
         # 3. observe
         test_history.add(screen)
 
@@ -371,3 +376,6 @@ class Agent(BaseModel):
       print("="*30)
       print(" [%d] Best reward : %d" % (best_idx, best_reward))
       print("="*30)
+    
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

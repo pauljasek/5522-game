@@ -7,7 +7,7 @@ Created on Wed Mar 27 16:25:54 2019
 
 
 class AgentConfig(object):
-  scale = 10000
+  scale = 100
   display = False
 
   max_step = 5000 * scale

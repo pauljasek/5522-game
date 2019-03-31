@@ -2,7 +2,7 @@
 """
 Created on Wed Mar  6 12:12:39 2019
 
-@author: Paul Jasek
+@author: Paul Jasek, Max Dignan
 """
 
 import cv2
@@ -30,6 +30,7 @@ class Game(object):
         self.H = H
         self.config = config
         self.action_size = 3
+        self.shown_blocks = 0
 
     def new_random_game(self):
         self.player = Block(self.W/2 + 0.5, self.H - 1, 1, 2, 0)
@@ -56,13 +57,17 @@ class Game(object):
             block.y += 1
             if abs(block.x - self.player.x) < (block.w/2 + self.player.w/2) \
                 and abs(block.y - self.player.y) < (block.h/2 + self.player.h/2):
-                    self.terminal = True
-                    reward += -1
+                    reward += 1
+                    print('score')
             elif block.y - block.h/2 >= self.H:
                 self.blocks.pop(i)
-                reward += 1
+                # if reward != 1:
+                #     reward -= 1
 
         if self.time % (1 + int(5*np.exp(-self.time/200))) == 0:
+            self.shown_blocks += 1
+            if self.shown_blocks > 25:
+                self.terminal = True
             self.blocks.append(Block(random.randint(1,self.W) - 0.5, 0.5, 1, 1, 0.5))
 
 
@@ -93,8 +98,6 @@ if __name__ == '__main__':
 
         key = cv2.waitKey(100)
 
-        print(key)
-
         action = 0
         if key == LEFT:
             action = 1
@@ -103,10 +106,10 @@ if __name__ == '__main__':
         else:
             action = 0
 
-        if random.uniform(0,1) > 0.5:
-            action = 2
-        else:
-            action = 1
+        # if random.uniform(0,1) > 0.5:
+        #     action = 2
+        # else:
+        #     action = 1
 
         screen, reward, terminal = game.act(action)
 

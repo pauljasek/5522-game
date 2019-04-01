@@ -204,8 +204,10 @@ class Agent(BaseModel):
       #    64, [3, 3], [1, 1], initializer, activation_fn, self.cnn_format, name='l3')
 
       shape = self.l1.get_shape().as_list()
-      print(shape)
       self.flat = tf.reshape(self.l1, [-1, reduce(lambda x, y: x * y, shape[1:])])
+
+      #shape = self.s_t.get_shape().as_list()
+      #self.flat = tf.reshape(self.s_t, [-1, reduce(lambda x, y: x * y, shape[1:])])
 
       self.l4, self.w['l4_w'], self.w['l4_b'] = linear(self.flat, 512, activation_fn=activation_fn, name='l4')
       self.q, self.w['q_w'], self.w['q_b'] = linear(self.l4, self.env.action_size, name='q')
@@ -239,6 +241,9 @@ class Agent(BaseModel):
 
       shape = self.target_l1.get_shape().as_list()
       self.target_flat = tf.reshape(self.target_l1, [-1, reduce(lambda x, y: x * y, shape[1:])])
+      
+      #shape = self.target_s_t.get_shape().as_list()
+      #self.target_flat = tf.reshape(self.target_s_t, [-1, reduce(lambda x, y: x * y, shape[1:])])
 
       self.target_l4, self.t_w['l4_w'], self.t_w['l4_b'] = \
             linear(self.target_flat, 512, activation_fn=activation_fn, name='target_l4')

@@ -359,8 +359,9 @@ class Agent(BaseModel):
         # 2. act
         screen, reward, terminal = self.env.act(action, is_training=False)
         
-        cv2.imshow('test', cv2.resize(screen, (500, 500), interpolation=cv2.INTER_NEAREST))    
-        cv2.waitKey(100)
+        if render:
+            cv2.imshow('test', cv2.resize(screen, (500, 500), interpolation=cv2.INTER_NEAREST))    
+            cv2.waitKey(1)
         
         # 3. observe
         test_history.add(screen)

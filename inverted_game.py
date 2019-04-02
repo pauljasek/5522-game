@@ -30,10 +30,10 @@ class Game(object):
         self.H = H
         self.config = config
         self.action_size = 3
-        self.shown_blocks = 0
+        self.missed_blocks = 0
 
     def new_random_game(self):
-        self.player = Block(self.W/2 + 0.5, self.H - 1, 1, 2, 0)
+        self.player = Block(self.W/2, self.H - 0.5, 2, 1, 0)
         self.blocks = []
         self.time = 0
         self.terminal = False
@@ -46,10 +46,10 @@ class Game(object):
 
         self.time += 1
         if action == 1:
-            if self.player.x - 1 >= 0:
+            if self.player.x - self.player.w >= 0:
                 self.player.x -= 1
         if action == 2:
-            if self.player.x + 1 <= self.W:
+            if self.player.x + self.player.w <= self.W:
                 self.player.x += 1
 
         for i in range(len(self.blocks) - 1, -1, -1):
@@ -58,16 +58,16 @@ class Game(object):
             if abs(block.x - self.player.x) < (block.w/2 + self.player.w/2) \
                 and abs(block.y - self.player.y) < (block.h/2 + self.player.h/2):
                     reward += 1
-                    print('score')
+                    self.blocks.pop(i)
             elif block.y - block.h/2 >= self.H:
                 self.blocks.pop(i)
-                # if reward != 1:
-                #     reward -= 1
+                reward -= 1
+                self.missed_blocks += 1
+                if self.missed_blocks >= 3:
+                    self.terminal = True
 
-        if self.time % (1 + int(5*np.exp(-self.time/200))) == 0:
-            self.shown_blocks += 1
-            if self.shown_blocks > 25:
-                self.terminal = True
+        if self.time % (1 + int(15*np.exp(-self.time/500))) == 0:
+
             self.blocks.append(Block(random.randint(1,self.W) - 0.5, 0.5, 1, 1, 0.5))
 
 
@@ -85,8 +85,8 @@ class Game(object):
 if __name__ == '__main__':
     UP = 2490368
     DOWN = 2621440
-    LEFT = 'a'
-    RIGHT = 'd'
+    LEFT = ord('a')
+    RIGHT = ord('d')
 
     game = Game(None)
     screen, reward, action, terminal = game.new_random_game()
@@ -97,7 +97,7 @@ if __name__ == '__main__':
             break
 
         key = cv2.waitKey(100)
-
+        
         action = 0
         if key == LEFT:
             action = 1

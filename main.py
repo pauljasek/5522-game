@@ -10,7 +10,7 @@ import random
 import tensorflow as tf
 
 from agent import Agent
-from game import Game
+from inverted_game import Game
 from config import get_config
 
 flags = tf.app.flags
@@ -21,12 +21,12 @@ flags.DEFINE_boolean('dueling', False, 'Whether to use dueling deep q-network')
 flags.DEFINE_boolean('double_q', False, 'Whether to use double q-learning')
 
 # Environment
-flags.DEFINE_string('env_name', 'simple', 'The name of gym environment to use')
+flags.DEFINE_string('env_name', 'catcher', 'The name of gym environment to use')
 flags.DEFINE_integer('action_repeat', 1, 'The number of action to be repeated')
 
 # Etc
 flags.DEFINE_boolean('use_gpu', True, 'Whether to use gpu or not')
-flags.DEFINE_string('gpu_fraction', '2/3', 'idx / # of gpu fraction e.g. 1/3, 2/3, 3/3')
+flags.DEFINE_string('gpu_fraction', '3/4', 'idx / # of gpu fraction e.g. 1/3, 2/3, 3/3')
 flags.DEFINE_boolean('display', False, 'Whether to do display the game screen or not')
 flags.DEFINE_boolean('is_train', True, 'Whether to do training or testing')
 flags.DEFINE_integer('random_seed', 0, 'Value of random seed')
@@ -68,7 +68,7 @@ def main(_):
     if FLAGS.is_train:
       agent.train()
     else:
-      agent.play()
+      agent.play(render=FLAGS.display)
 
 if __name__ == '__main__':
   tf.app.run()
